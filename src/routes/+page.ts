@@ -9,7 +9,8 @@ type PokemonList = [
     {
         name: string,
         url: string,
-        id: string
+        id: string,
+        image: string
     }
 ]
 
@@ -27,7 +28,8 @@ export const load = (async ({ fetch }) => {
         return {
             name: pokemon.name,
             url: pokemon.url,
-            id
+            id,
+            image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
         }
     })
 
