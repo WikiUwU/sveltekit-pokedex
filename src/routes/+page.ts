@@ -1,24 +1,20 @@
 import type { PageLoad } from "./$types";
 
-type IndexPokemon = {
+type APIPokemon = {
     name: string,
     url: string
 }
 
-type PokemonList = [
-    {
-        name: string,
-        url: string,
-        id: string,
-        image: string
-    }
-]
+export type IndexPokemon = APIPokemon & {
+    id: string,
+    image: string
+}
 
 export const load = (async ({ fetch }) => {
 
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
     const jsonData = await response.json();
-    const pokemons: PokemonList = jsonData.results.map((pokemon: IndexPokemon) => {
+    const pokemons: IndexPokemon[] = jsonData.results.map((pokemon: APIPokemon) => {
 
         //get pokemon id from the url like "https://pokeapi.co/api/v2/pokemon/25/"
         const splitURL = pokemon.url.split("/");

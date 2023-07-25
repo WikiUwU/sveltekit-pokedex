@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import type { IndexPokemon } from './+page';
     import { generations } from './generations'
 
     export let data: PageData;
@@ -10,11 +11,21 @@
         return stringChars.join("");
     }
 
+    let pokemonID: string;
+    $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
+
+    function pokemonClick(pokemon: IndexPokemon) {
+        pokemonID = pokemon.id;
+        console.log(pokemonID);
+    }
 </script>
 
 
 
 <div class="layout">
+
+    <h1>{pokemonID}</h1>
+    <h2>{pokemon?.name}</h2>
 
     <div class="generations">
         {#each generations as generation (generation.id)}
@@ -27,7 +38,10 @@
     <div class="pokemons">
 
         {#each data.pokemons as pokemon}
-            <div class="pokemon">
+
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div class="pokemon" on:click={() => pokemonClick(pokemon)}>
                 <div class="pokemon-content">
                     <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
                     <p>{capitalize(pokemon.name)}</p>
@@ -37,6 +51,7 @@
                     {pokemon.id}
                 </div>
             </div>
+
         {/each}
 
     </div>
