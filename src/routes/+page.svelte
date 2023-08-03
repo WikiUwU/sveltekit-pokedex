@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import type { IndexPokemon } from './+page';
+    import { page } from '$app/stores';
     import { generations } from './generations'
+    import { goto } from '$app/navigation';
 
     export let data: PageData;
 
@@ -11,13 +12,25 @@
         return stringChars.join("");
     }
 
-    let pokemonID: string;
+    $: pokemonID = $page.url.searchParams.get("pokemonID") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
     $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
 
-    function pokemonClick(pokemon: IndexPokemon) {
-        pokemonID = pokemon.id;
-        console.log(pokemonID);
-    }
+    $: pokemonID2 = $page.url.searchParams.get("pokemonID2") || "";
+    $: pokemon2 = data.pokemons.find(pokemon => pokemon.id === pokemonID2);
+
+    // function pokemonClick(pokemon: IndexPokemon) {
+    //     pokemonID = pokemon.id;
+    //     goto(`?pokemonID=${pokemonID}`);
+    // }
+
+    function updateSearchParams(key: string, value: string) {
+        const searchParams = new URLSearchParams($page.url.searchParams);
+        searchParams.set(key, value);
+        goto(`?${searchParams.toString()}`, {
+            noScroll: true
+        });
+    };
+
 </script>
 
 
@@ -26,6 +39,9 @@
 
     <h1>{pokemonID}</h1>
     <h2>{pokemon?.name}</h2>
+
+    <h1>{pokemonID2}</h1>
+    <h2>{pokemon2?.name}</h2>
 
     <div class="generations">
         {#each generations as generation (generation.id)}
@@ -41,15 +57,18 @@
 
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div class="pokemon" on:click={() => pokemonClick(pokemon)}>
-                <div class="pokemon-content">
-                    <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
-                    <p>{capitalize(pokemon.name)}</p>
+            <div class="pokemon">
+                <div on:click={() => updateSearchParams("pokemonID", pokemon.id)}>
+                    <div class="pokemon-content">
+                        <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
+                        <p>{capitalize(pokemon.name)}</p>
+                    </div>
+                    
+                    <div class="monster-id">
+                        {pokemon.id}
+                    </div>
                 </div>
-                
-                <div class="monster-id">
-                    {pokemon.id}
-                </div>
+                <div on:click={() => updateSearchParams('pokemonID2', pokemon.id)}>Add 2. pokemon</div>
             </div>
 
         {/each}
