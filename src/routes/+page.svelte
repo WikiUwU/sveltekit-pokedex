@@ -13,6 +13,16 @@
 
 
     export let data: PageData;
+    
+    let form = {
+        searchString: ""
+    }
+    let searchString: string = "";
+    $: selectedPokemons = data.pokemons.filter(pokemon => {
+        if ( pokemon.name.includes(searchString.toLowerCase()) ) {
+            return pokemon
+        }
+    })
 
     $: pokemonID = $page.url.searchParams.get("pokemonID") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
     $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
@@ -28,6 +38,10 @@
             noScroll: true
         });
     };
+
+    function sumbitSearch() {
+        searchString = form.searchString;
+    }
 </script>
 
 
@@ -56,11 +70,15 @@
         {/each}
     </div>
 
+    <form on:submit={sumbitSearch} class="search-form">
+        <input type="text" bind:value={form.searchString} placeholder="Pokemon Name"> 
+        <input type="submit" value="Search">
+    </form>
     
 
     <div class="pokemons">
 
-        {#each data.pokemons as pokemon (pokemon.id)} 
+        {#each selectedPokemons as pokemon (pokemon.id)} 
 
             <PokemonComponent 
                 pokemon={pokemon} 
@@ -107,6 +125,23 @@
 
     .generation:hover {
         background-color: #e8e8e8;
+    }
+
+    .search-form {
+        margin: 20px 0;
+    }
+
+    .search-form input[type="text"] {
+        padding: 5px 10px;
+        border: 1px solid #888;
+        border-radius: 5px;
+        width: 200px;
+    }
+
+    .search-form input[type="submit"] {
+        padding: 4px 12px; 
+        border: 1px solid #888;
+        border-radius: 5px;
     }
 
     .pokemons {
