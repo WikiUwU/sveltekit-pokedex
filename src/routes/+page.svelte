@@ -3,14 +3,16 @@
     import { page } from '$app/stores';
     import { generations } from './generations'
     import { goto } from '$app/navigation';
+    import PokemonComponent from './PokemonComponent.svelte';
+
+    // function capitalize(string: string) {
+    //     const stringChars: string[] = string.split("");
+    //     stringChars[0] = stringChars[0].toUpperCase();
+    //     return stringChars.join("");
+    // }
+
 
     export let data: PageData;
-
-    function capitalize(string: string) {
-        const stringChars: string[] = string.split("");
-        stringChars[0] = stringChars[0].toUpperCase();
-        return stringChars.join("");
-    }
 
     $: pokemonID = $page.url.searchParams.get("pokemonID") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
     $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
@@ -18,10 +20,6 @@
     $: pokemonID2 = $page.url.searchParams.get("pokemonID2") || "";
     $: pokemon2 = data.pokemons.find(pokemon => pokemon.id === pokemonID2);
 
-    // function pokemonClick(pokemon: IndexPokemon) {
-    //     pokemonID = pokemon.id;
-    //     goto(`?pokemonID=${pokemonID}`);
-    // }
 
     function updateSearchParams(key: string, value: string) {
         const searchParams = new URLSearchParams($page.url.searchParams);
@@ -30,18 +28,27 @@
             noScroll: true
         });
     };
-
 </script>
+
 
 
 
 <div class="layout">
 
-    <h1>{pokemonID}</h1>
-    <h2>{pokemon?.name}</h2>
+    {#if pokemon}
+        <PokemonComponent 
+            pokemon={pokemon} 
+            updateSearchParams={updateSearchParams}
+        />
+    {/if}
 
-    <h1>{pokemonID2}</h1>
-    <h2>{pokemon2?.name}</h2>
+    {#if pokemon2}
+        <PokemonComponent 
+            pokemon={pokemon2} 
+            updateSearchParams={updateSearchParams}
+        />
+    {/if}
+    
 
     <div class="generations">
         {#each generations as generation (generation.id)}
@@ -53,23 +60,13 @@
 
     <div class="pokemons">
 
-        {#each data.pokemons as pokemon}
+        {#each data.pokemons as pokemon (pokemon.id)} 
 
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div class="pokemon">
-                <div on:click={() => updateSearchParams("pokemonID", pokemon.id)}>
-                    <div class="pokemon-content">
-                        <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
-                        <p>{capitalize(pokemon.name)}</p>
-                    </div>
-                    
-                    <div class="monster-id">
-                        {pokemon.id}
-                    </div>
-                </div>
-                <div on:click={() => updateSearchParams('pokemonID2', pokemon.id)}>Add 2. pokemon</div>
-            </div>
+            <PokemonComponent 
+                pokemon={pokemon} 
+                updateSearchParams={updateSearchParams}
+                isInteractive={true}
+            />
 
         {/each}
 
@@ -78,6 +75,7 @@
     
 
 </div>
+
 
 
 
@@ -118,39 +116,5 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
-
-    .pokemon {
-        position: relative;
-        text-align: center;
-        width: 100px;
-        margin: 10px;
-        padding: 10px;
-        background-color: rgb(255, 235, 205);
-        border-radius: 5px;
-    }
-
-    .pokemon:hover {
-        background-color: rgb(240, 220, 190);
-    }
-
-    .monster-id {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        font-size: 0.8rem;
-        color: #888;
-    }
-
-    .pokemon-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-content: center;
-    }
-
-    .pokemon-content p {
-        margin: 0;
-    }
-    
 </style>
 
