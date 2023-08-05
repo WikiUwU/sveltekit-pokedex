@@ -24,12 +24,13 @@
         }
     })
 
-    $: pokemonID = $page.url.searchParams.get("pokemonID") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
+    $: pokemonID = $page.url.searchParams.get("pokemon_id") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
     $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
 
-    $: pokemonID2 = $page.url.searchParams.get("pokemonID2") || "";
+    $: pokemonID2 = $page.url.searchParams.get("pokemon_id2") || "";
     $: pokemon2 = data.pokemons.find(pokemon => pokemon.id === pokemonID2);
 
+    $: selectedGenerationID = $page.url.searchParams.get("generation_id") || "";
 
     function updateSearchParams(key: string, value: string) {
         const searchParams = new URLSearchParams($page.url.searchParams);
@@ -65,12 +66,25 @@
     
 
     <div class="generations">
+        <button 
+            class="generation"
+            class:active={selectedGenerationID === "all"} 
+            on:click={() => updateSearchParams("generation_id", "all")}
+            >
+                All
+        </button>
         {#each generations as generation (generation.id)}
-            <button class="generation">{generation.main_region}</button>
+            <button 
+                class="generation"
+                class:active={selectedGenerationID === generation.id.toString()} 
+                on:click={() => updateSearchParams("generation_id", generation.id.toString())}
+            >
+                {generation.main_region}
+            </button>
         {/each}
     </div>
 
-    <form on:submit={sumbitSearch} class="search-form">
+    <form on:submit|preventDefault={sumbitSearch} class="search-form">
         <input type="text" bind:value={form.searchString} placeholder="Pokemon Name"> 
         <input type="submit" value="Search">
     </form>
@@ -117,15 +131,27 @@
     .generation {
         margin: 10px;
         padding: 5px 10px;
-        border: 1px solid #888;
+        border: 2px solid #333;
         border-radius: 5px;
         background-color: #f9f9f9;
         color: #333;
+        cursor: pointer;
     }
 
     .generation:hover {
         background-color: #e8e8e8;
     }
+
+    .generation.active {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .generation.active:hover {
+        background-color: #444;
+    }
+
+    
 
     .search-form {
         margin: 20px 0;
@@ -142,6 +168,9 @@
         padding: 4px 12px; 
         border: 1px solid #888;
         border-radius: 5px;
+        background-color: #333;
+        color: #fff;
+        cursor: pointer;
     }
 
     .pokemons {

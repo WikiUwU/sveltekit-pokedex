@@ -18,7 +18,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="pokemon">
     
-    <div on:click={() => isInteractive ? updateSearchParams('pokemonID', pokemon.id) : ""}>
+    <div on:click={() => isInteractive ? updateSearchParams('pokemon_id', pokemon.id) : ""}>
         <div class="pokemon-content">
             <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
             <p>{capitalize(pokemon.name)}</p>
@@ -30,7 +30,7 @@
     </div>
 
     {#if isInteractive}
-        <div on:click={() => updateSearchParams('pokemonID2', pokemon.id)}>Add 2. pokemon</div>
+        <div on:click={() => updateSearchParams('pokemon_id2', pokemon.id)}>Add 2. pokemon</div>
     {/if}
 </div> 
 

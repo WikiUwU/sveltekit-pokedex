@@ -10,11 +10,22 @@ export type IndexPokemon = APIPokemon & {
     image: string
 }
 
-export const load = (async ({ fetch }) => {
+export const load = (async ({ fetch, url }) => {
+    const generationID = url.searchParams.get("generation_id") || "all";
 
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
-    const jsonData = await response.json();
-    const pokemons: IndexPokemon[] = jsonData.results.map((pokemon: APIPokemon) => {
+    let pokemonList = [];
+
+    if (generationID === "all") {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20000')
+        const jsonData = await response.json();
+        pokemonList = jsonData.results;
+    }else {
+        const generationResponse = await fetch(`https://pokeapi.co/api/v2/generation/${generationID}`);
+        const generationJSON = await generationResponse.json();
+        pokemonList = generationJSON.pokemon_species;
+    }
+
+    const pokemons: IndexPokemon[] = pokemonList.map((pokemon: APIPokemon) => {
 
         //get pokemon id from the url like "https://pokeapi.co/api/v2/pokemon/25/"
         const splitURL = pokemon.url.split("/");
@@ -27,7 +38,9 @@ export const load = (async ({ fetch }) => {
             id,
             image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
         }
-    })
+    });
+
+    
 
     return {
         pokemons
