@@ -48,7 +48,7 @@
 
 
 
-<div class="layout">
+<!-- <div class="layout"> -->
 
     {#if pokemon}
         <PokemonComponent 
@@ -106,20 +106,19 @@
 
     
 
-</div>
+<!-- </div> -->
 
 
 
 
 <style>
-    .layout {
-        width: 100%;
-        height: 100%;
+    /* .layout {
+        max-width: 90%;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-    }
+    } */
 
     .generations {
         display: flex;
