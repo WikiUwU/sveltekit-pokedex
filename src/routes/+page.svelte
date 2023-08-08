@@ -23,8 +23,7 @@
             return pokemon
         }
     })
-
-
+    
 
     $: selectedGenerationID = $page.url.searchParams.get("generation_id") || "";
 

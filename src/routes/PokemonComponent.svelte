@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { IndexPokemon } from "./+page";
+    import { caughtPokemons } from "$lib/stores";
 
     export let pokemon: IndexPokemon;
 
@@ -9,8 +10,10 @@
         return stringChars.join("");
     }
 
-    function catchPokemon(pokemon_id: string) {
-        console.log(pokemon_id);
+    function catchPokemon() {
+        caughtPokemons.update(pokemons => {
+            return [...pokemons, pokemon];
+        })
     }
 </script>
 
@@ -20,7 +23,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="pokemon">
     
-    <div on:click={() => catchPokemon(pokemon.id)}>
+    <div on:click={catchPokemon}>
         <div class="pokemon-content">
             <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
             <p>{capitalize(pokemon.name)}</p>
