@@ -24,11 +24,7 @@
         }
     })
 
-    $: pokemonID = $page.url.searchParams.get("pokemon_id") || ""; // || "" means simply "or null/empty string, requieremnt for Typescript types"
-    $: pokemon = data.pokemons.find(pokemon => pokemon.id === pokemonID);
 
-    $: pokemonID2 = $page.url.searchParams.get("pokemon_id2") || "";
-    $: pokemon2 = data.pokemons.find(pokemon => pokemon.id === pokemonID2);
 
     $: selectedGenerationID = $page.url.searchParams.get("generation_id") || "";
 
@@ -49,21 +45,8 @@
 
 
 <!-- <div class="layout"> -->
-
-    {#if pokemon}
-        <PokemonComponent 
-            pokemon={pokemon} 
-            updateSearchParams={updateSearchParams}
-        />
-    {/if}
-
-    {#if pokemon2}
-        <PokemonComponent 
-            pokemon={pokemon2} 
-            updateSearchParams={updateSearchParams}
-        />
-    {/if}
     
+
 
     <div class="generations">
         <button 
@@ -96,8 +79,6 @@
 
             <PokemonComponent 
                 pokemon={pokemon} 
-                updateSearchParams={updateSearchParams}
-                isInteractive={true}
             />
 
         {/each}

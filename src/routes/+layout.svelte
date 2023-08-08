@@ -32,7 +32,7 @@
     }
 
     .navbar a:hover {
-        color: #ccc;
+        color: #bbb;
     }
 
     .navbar a.active {

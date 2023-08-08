@@ -2,13 +2,15 @@
     import type { IndexPokemon } from "./+page";
 
     export let pokemon: IndexPokemon;
-    export let updateSearchParams: (key: string, value: string) => void
-    export let isInteractive: boolean = false;
 
     function capitalize(string: string) {
         const stringChars: string[] = string.split("");
         stringChars[0] = stringChars[0].toUpperCase();
         return stringChars.join("");
+    }
+
+    function catchPokemon(pokemon_id: string) {
+        console.log(pokemon_id);
     }
 </script>
 
@@ -18,7 +20,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="pokemon">
     
-    <div on:click={() => isInteractive ? updateSearchParams('pokemon_id', pokemon.id) : ""}>
+    <div on:click={() => catchPokemon(pokemon.id)}>
         <div class="pokemon-content">
             <img src={pokemon.image} alt="Pokemon image of {capitalize(pokemon.name)}">
             <p>{capitalize(pokemon.name)}</p>
@@ -29,9 +31,6 @@
         </div>
     </div>
 
-    {#if isInteractive}
-        <div on:click={() => updateSearchParams('pokemon_id2', pokemon.id)}>Add 2. pokemon</div>
-    {/if}
 </div> 
 
 
